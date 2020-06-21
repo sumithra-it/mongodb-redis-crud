@@ -1,0 +1,23 @@
+version: "3"
+services:
+  mongo-database:
+    image: mongo:3.2.4
+    container_name: "mongo-database"
+    ports:
+      - 27017:27017
+    command: --smallfiles
+  redis-cache:
+    image: redis
+    container_name: "redis-cache"
+    ports:
+      - 6379:6379
+  mongo-redis:
+    image: sr/mongo-rediscrud:0.0.1-SNAPSHOT
+    ports:
+      - 8080:8080
+    depends_on:
+      - mongo-database
+      - redis-cache 
+    links:
+      - mongo-database
+      - redis-cache

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.cache.annotation.EnableCaching;
@@ -16,7 +17,7 @@ public class RedicConfigurationClass extends CachingConfigurerSupport{
 	@Bean
     public JedisConnectionFactory jedisConnectionFactory()
     {
-        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(standaloneoconfig());
         return jedisConnectionFactory;
     }
     @Bean
@@ -28,6 +29,10 @@ public class RedicConfigurationClass extends CachingConfigurerSupport{
         return redisTemplate;
     }
 
+    RedisStandaloneConfiguration standaloneoconfig() {
+		RedisStandaloneConfiguration standaloneoconfig = new RedisStandaloneConfiguration("redis-cache", 6379);
+		return standaloneoconfig;
+	}
 // CacheManager implementation that lazily builds ConcurrentMapCache instances for each getCache request. 
 //    @Bean
 //    public CacheManager cacheManager(RedisTemplate redisTemplate) {

@@ -8,12 +8,13 @@
 		<version>2.3.1.RELEASE</version>
 	</parent>
 	<groupId>com.redis</groupId>
-	<artifactId>rediscrud</artifactId>
+	<artifactId>mongo-rediscrud</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>mongodbrediscrud</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>1.8</java.version>
+	 	<docker.image.prefix>sr</docker.image.prefix>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -64,7 +65,28 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-		</plugins>
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.4.13</version>
+				<configuration>
+					<repository>${docker.image.prefix}/${project.artifactId}</repository>
+	                <tag>${project.version}</tag>
+					<buildArgs>
+						<JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+					</buildArgs>
+					<finalName>${project.artifactId}-${project.version}</finalName>
+				</configuration>
+				<executions>
+					<execution>
+						<id>default</id>
+						<phase>install</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin> 	
+		</plugins> 		
 	</build>
-
 </project>
