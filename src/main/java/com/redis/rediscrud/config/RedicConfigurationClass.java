@@ -9,6 +9,11 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.cache.CacheManager;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import java.util.Map;
+import java.util.HashMap;
 
 @Configuration
 @EnableRedisRepositories
@@ -36,10 +41,11 @@ public class RedicConfigurationClass extends CachingConfigurerSupport{
 // CacheManager implementation that lazily builds ConcurrentMapCache instances for each getCache request. 
 //    @Bean
 //    public CacheManager cacheManager(RedisTemplate redisTemplate) {
-//      RedisCacheManager cacheManager = new RedisCacheManager(redisTemplate);
+//    	Map<String,RedisCacheConfiguration> cacheConfigMap = new HashMap<>();
+//      RedisCacheManager cacheManager = RedisCacheManager.RedisCacheManagerBuilder.withInitialCacheConfigurations(cacheConfigMap);
 //
 //      // Number of seconds before expiration. Defaults to unlimited (0)
-//      cacheManager.setDefaultExpiration(300);
+//      //cacheManager.setDefaultExpiration(300);
 //      return cacheManager;
 //    }
 }

@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface FruitRepository extends MongoRepository<FruitModel ,String> {
 
-	List<FruitModel> findByName(String name);
+	public List<FruitModel> findByName(String name);
 }

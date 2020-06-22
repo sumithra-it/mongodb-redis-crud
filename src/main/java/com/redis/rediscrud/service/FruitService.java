@@ -27,12 +27,13 @@ public class FruitService {
 
     @Cacheable(value="fruit")
     public FruitModel createFruit(FruitModel fruitModel) {
-    	log.info("Inside Save: Cache will be written by save method now");
+    	log.info("Not found in cache: Inside Save: Cache will be written by save method now");
         return fruitRepository.save(fruitModel);
     }
 
     @CachePut(value="fruit", key="#id")
-    public FruitModel updateFruitById(String id, FruitModel fruitModel) {
+    public FruitModel updateFruitByIdWorking(String id, FruitModel fruitModel) {
+    	log.info("Not found in cache. UpdateFruitById called");
     	String result = null;
     	if (fruitRepository.existsById(id)) {
     		return fruitRepository.save(fruitModel);	
@@ -43,7 +44,20 @@ public class FruitService {
     	return null;
     }  
     
-  //  @Cacheable("fruitsCache")
+    @CachePut(value="fruit", key="#fruitModel.id")
+    public FruitModel updateFruitById(String id, FruitModel fruitModel) {
+    	String result = null;
+    	log.info("Not found in cache. UpdateFruitById called");
+    	if (fruitRepository.existsById(id)) {
+    		return fruitRepository.save(fruitModel);	
+    	} else {
+    		result = "Nothing to update. Not found in DB." ;
+    	}
+    	log.info(result);
+    	return null;
+    }  
+    
+  // do not cache all. Cache is needs to be refreshed, if there are update calls. 
     public List<FruitModel> findAll() {
     	log.info("Not found in cache. Loading findAll from Db");
         return fruitRepository.findAll();
@@ -54,7 +68,6 @@ public class FruitService {
 		log.info("Not found in cache. Inside find: Fetching by id: " + id);
 		Optional<FruitModel> opt = fruitRepository.findById(id);
 		if (!opt.isPresent()) return null;
-		log.info("Found by id successfully!");
 		return opt.get();
 	}
 	
@@ -64,9 +77,9 @@ public class FruitService {
         return "this Is it";
     }
     
-    //This method needs to be fixed - Doesnt return any results
+    //TODO: This method needs to be tested - Doesnt return any results
 	public List<FruitModel> findFruitByName(String name) {
-		log.info("Fetching by name: " + name);
+		log.info("Not found in cache. Fetching by name: " + name);
 		List<FruitModel> list = fruitRepository.findByName(name);
 		log.info("Found by name: {} matches", list.size());
 		return list;
